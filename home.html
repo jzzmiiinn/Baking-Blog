@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Blog</title>
+        <link rel="icon" type="image/png" href="images(3).png">
+        <link href="styles.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <meta name="description" content="Jazz's Baking – A cozy blog of homemade cakes, cookies, and baking tutorials. Find joy in every bite!">
+        <meta name="author" content="Yasmin">
+        <meta name="keywords" content="baking, cakes, cookies, desserts, recipes, Jazz's Baking, Yasmin baking blog">
+    </head>
+    <body>
+        <nav>
+            <div class="logo">
+                <img id="logo-img" src="images(3).png">
+                <p>Jazz's Baking</p>
+            </div>
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <ul class="nav-links">
+                <li><a href="home.html">HOME</a></li>
+                <li><a href="add.html">ADD POST</a></li>
+                <li><a href="favorite.html">FAVORITE</a></li>
+                <li><a href="posts.html">POSTS</a></li>
+                <li><a href="#about-us">ABOUT US</a></li>
+                <li>
+                    <form id="searchForm">
+                        <input id="searchInput" type="search" placeholder="Search recipes...">
+                        <button type="submit">Search</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <div id="home">
+            <div class="home-content">
+                <div class="text-content">
+                    <h1>Welcome to Jazz's Baking</h1>
+                    <br>
+                    <h2>Where every recipe tells a story, and every bite brings joy</h2>
+                    <ul class="social-icons">
+                        <li><a href="" target="_blank"><i class="fa-brands fa-pinterest"></i></a></li>
+                        <li><a href="" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                        <li><a href="" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="" target="_blank"><i class="fa-brands fa-twitter"></i></a></li>
+                        <li><a href="" target="_blank"><i class="fa-brands fa-youtube"></i></a></li>
+                    </ul>
+                </div>
+                <div class="image-content">
+                    <img src="images(2).png">
+                </div>
+            </div>
+        </div>
+        <div class="categories">
+            <h1>Featured Recipes</h1>
+            <div class="container featured-container">
+                <div class="cards" data-title="Cakes and Cupcakes">
+                    <img src="cupcake.jpg" alt="Cakes & Cupcakes">
+                    <h2>Cakes & Cupcakes</h2>
+                    <h3>Layer cakes, birthday treats, cheesecakes</h3>
+                    <p>This section is packed with stunning cakes and cupcakes for every celebration - think moist layers, creamy frostings, rich cheesecakes, and cute cupcakes perfect for parties or just because.</p>
+                </div>
+                <div class="cards" data-title="Cookies">
+                    <img src="cookies.jpg" alt="Cookies">
+                    <h2>Cookies</h2>
+                    <h3>Soft, chewy, crispy, festive, and everything in between</h3>
+                    <p>From classic chocolate chip to holiday cut-outs, this category includes all kinds of cookies - simple, indulgent, or decorative. Great for gifting, snacking, or dunking in milk.</p>
+                </div>
+                <div class="cards" data-title="Breads and Rolls">
+                    <img src="breads.jpg" alt="Breads and Rolls">
+                    <h2>Breads and Rolls</h2>
+                    <h3>From sourdough to sweet rolls</h3>
+                    <p>Find step-by-step recipes for artisan-style breads, fluffy dinner rolls, and sweet breakfast buns. Perfect for bakers who love the smell of warm bread and the magic of dough rising.</p>
+                </div>
+            </div>
+            <div class="view-all-container">
+                    <a href="posts.html" class="view-all-btn">
+                        Browse All Recipes <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+            </div>
+        </div>
+        <div class="story">
+            <h1>Our Story</h1>
+            <p>
+                Hi, I'm Yasmin – Welcome to Jazz's Baking
+                I’m Yasmin, the heart behind this blog and a self-taught baker who started mixing ingredients out of curiosity and never looked back. What began as a creative escape quickly became a passion—one that brought comfort, joy, and a sense of connection, both in and out of the kitchen.
+                Jazz’s Bakery is where I share my favorite recipes, lessons learned, and the little moments that make baking magical. Whether you're a beginner or a seasoned baker, I hope you find inspiration, warmth, and a sprinkle of joy in every post.
+                Thanks for being here—now let’s bake something wonderful
+            </p>
+        </div>
+        <section id="existing-comments">
+            <h3>💬 What Others Are Saying</h3>
+            <form id="comment-form">
+                <input type="text" id="username" placeholder="Your name" required />
+                <input type="text" id="commentText" placeholder="Your comment" required />
+                <button type="submit">Post Comment</button>
+            </form>
+            <div id="comment-list" class="row-comments">
+                <div class="comment" data-id="1">
+                    <div class="comment-header">
+                        <p class="user">🎂 Sara M.</p>
+                        <div class="comment-actions">
+                            <i class="fas fa-edit edit-comment"></i>
+                            <i class="fas fa-trash-alt delete-comment"></i>
+                        </div>
+                    </div>
+                    <p class="text">I tried the vanilla cupcake recipe and it was a hit at my niece's birthday!</p>
+                </div>
+                <div class="comment" data-id="2">
+                    <div class="comment-header">
+                        <p class="user">🍪 Daniel K.</p>
+                        <div class="comment-actions">
+                            <i class="fas fa-edit edit-comment"></i>
+                            <i class="fas fa-trash-alt delete-comment"></i>
+                        </div>
+                    </div>
+                    <p class="text">Love your step-by-step guides. Makes baking less scary for beginners like me.</p>
+                </div>
+                <div class="comment" data-id="3">
+                    <div class="comment-header">
+                        <p class="user">🧁 Amina R.</p>
+                        <div class="comment-actions">
+                            <i class="fas fa-edit edit-comment"></i>
+                            <i class="fas fa-trash-alt delete-comment"></i>
+                        </div>
+                    </div>
+                    <p class="text">Just rated 5 stars! Your blog layout is cozy and beautiful.</p>
+                </div>
+            </div>
+        </section>
+        <footer id="about-us">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <h3>About Jazz's Baking</h3>
+                    <p>Jazz's Baking is a cozy baking blog offering tested recipes, baking guides, and stories from the kitchen. We believe that baking should be joyful, approachable, and always delicious.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/all-posts.html">All Posts</a></li>
+                        <li><a href="/favorites.html">Favorites</a></li>
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p>Email: yourname@example.com</p>
+                    <p>Instagram: @yourbakingblog</p>
+                    <p>Facebook: /yourbakingblog</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Jazz's Baking. All rights reserved. | Built with 🍰 and ❤️ by Yasmin</p>
+            </div>
+        </footer>
+        <div id="edit-comment-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Edit Comment</h3>
+                <form id="edit-comment-form">
+                    <input type="hidden" id="edit-comment-id">
+                    <input type="text" id="edit-username" placeholder="Your name" required>
+                    <textarea id="edit-comment-text" placeholder="Your comment" required></textarea>
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+        <div id="delete-comment-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Delete Comment</h3>
+                <p>Are you sure you want to delete this comment?</p>
+                <div class="modal-buttons">
+                    <button id="cancel-delete">Cancel</button>
+                    <button id="confirm-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
