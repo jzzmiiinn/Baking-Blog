@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
                 menuToggle.checked = false;
-                navLinks.style.display = 'none';
+                navLinks.style.display = 'none'; 
             }
         });
     });
@@ -494,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function saveNewPost(post) {
+function saveNewPost(post) {    
     const savedPosts = localStorage.getItem('bakingPosts');
     let posts = [];
     

@@ -733,7 +733,6 @@ footer {
     .hamburger {
         display: flex;
     }
-    
     .nav-links {
         display: none;
         flex-direction: column;
@@ -742,34 +741,34 @@ footer {
         padding: 20px 0;
         gap: 15px;
     }
-    
     .nav-links li {
         width: 100%;
         text-align: center;
     }
-    
     .menu-toggle:checked ~ .nav-links {
         display: flex;
     }
-    
     #searchForm {
         justify-content: center;
         padding: 0 20px;
         width: 100%;
     }
-    
     #searchInput {
         width: 70%;
+    }
+    .featured-container {
+      flex-direction: column;
+    }
+    .featured-container .cards {
+      width: 95%;
     }
     .modal-content {
         flex-direction: column;
         width: 90%;
     }
-    
     .modal-image {
         min-width: 100%;
     }
-    
     .cards {
         width: 100%;
     }
@@ -777,15 +776,12 @@ footer {
           flex-direction: column;
           width: 90%;
       }
-      
       .recipe-modal-image {
           min-width: 100%;
       }
-      
       .cards {
           width: 100%;
       }
-
       .recipe-edit-content {
           width: 90%;
       }
