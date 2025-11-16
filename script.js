@@ -1,12 +1,19 @@
+// ============================================================================
+// NAVIGATION MENU TOGGLE FUNCTIONALITY
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Get navigation elements
     const menuToggle = document.getElementById('menu-toggle');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
+    // Toggle menu when hamburger is clicked
     hamburger.addEventListener('click', function() {
         const isOpen = menuToggle.checked;
         menuToggle.checked = !isOpen;
         
+        // Show/hide navigation links based on toggle state
         if (!isOpen) {
             navLinks.style.display = 'flex';
         } else {
@@ -14,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Close mobile menu when a link is clicked
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
@@ -23,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Handle window resize to maintain proper menu display
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
             navLinks.style.display = 'flex';
@@ -31,110 +40,149 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// ============================================================================
+// SEARCH FUNCTIONALITY
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
-  const searchForm = document.getElementById('searchForm');
-  const searchInput = document.getElementById('searchInput');
-  
-  if (searchForm) {
-    searchForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      performSearch(searchInput.value.trim());
-    });
+    // Get search form elements
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
     
-    searchInput.addEventListener('input', function() {
-      performSearch(this.value.trim());
-    });
-  }
-  
-  const urlParams = new URLSearchParams(window.location.search);
-  const searchQuery = urlParams.get('search');
-  if (searchQuery) {
-    searchInput.value = searchQuery;
-    performSearch(searchQuery);
-  }
-  
-  function performSearch(searchTerm) {
-    const cards = document.querySelectorAll('.cards');
-    let hasResults = false;
-    const searchTermLower = searchTerm.toLowerCase();
-    
-    cards.forEach(card => {
-      const title = card.getAttribute('data-title').toLowerCase();
-      const cardTitle = card.querySelector('h2')?.textContent.toLowerCase() || '';
-      const cardSubtitle = card.querySelector('h3')?.textContent.toLowerCase() || '';
-      const cardText = card.querySelector('p')?.textContent.toLowerCase() || '';
-      
-      if (searchTerm === '' || 
-          title.includes(searchTermLower) || 
-          cardTitle.includes(searchTermLower) ||
-          cardSubtitle.includes(searchTermLower) ||
-          cardText.includes(searchTermLower)) {
-        card.style.display = 'block';
-        hasResults = true;
-        highlightText(card, searchTermLower);
-      } else {
-        card.style.display = 'none';
-      }
-    });
-    
-    showNoResultsMessage(hasResults, searchTerm);
-    updateURL(searchTerm);
-  }
-  
-  function highlightText(element, searchTerm) {
-    if (!searchTerm) return;
-    
-    const elementsToHighlight = element.querySelectorAll('h2, h3, p');
-    
-    elementsToHighlight.forEach(el => {
-      const text = el.textContent;
-      const regex = new RegExp(searchTerm, 'gi');
-      el.innerHTML = text.replace(regex, match => 
-        `<span class="search-highlight">${match}</span>`
-      );
-    });
-  }
-  
-  function showNoResultsMessage(hasResults, searchTerm) {
-    const container = document.querySelector('.container');
-    let message = document.getElementById('no-results-message');
-    
-    if (!hasResults && searchTerm) {
-      if (!message) {
-        message = document.createElement('div');
-        message.id = 'no-results-message';
-        message.className = 'no-results';
-        message.innerHTML = `
-          <p>No recipes found for "<strong>${searchTerm}</strong>"</p>
-          <button id="clear-search">Show All Recipes</button>
-        `;
-        container.appendChild(message);
-        
-        document.getElementById('clear-search').addEventListener('click', function() {
-          searchInput.value = '';
-          performSearch('');
-          message.remove();
+    // Set up search form event listeners
+    if (searchForm) {
+        // Handle form submission
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performSearch(searchInput.value.trim());
         });
-      }
-    } else if (message) {
-      message.remove();
+        
+        // Handle real-time search as user types
+        searchInput.addEventListener('input', function() {
+            performSearch(this.value.trim());
+        });
     }
-  }
-  
-  function updateURL(searchTerm) {
-    const url = new URL(window.location);
-    if (searchTerm) {
-      url.searchParams.set('search', searchTerm);
-    } else {
-      url.searchParams.delete('search');
+    
+    // Check URL for existing search query and perform search if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+    if (searchQuery) {
+        searchInput.value = searchQuery;
+        performSearch(searchQuery);
     }
-    window.history.pushState({}, '', url);
-  }
+    
+    /**
+     * Perform search across all recipe cards
+     * @param {string} searchTerm - The term to search for
+     */
+    function performSearch(searchTerm) {
+        const cards = document.querySelectorAll('.cards');
+        let hasResults = false;
+        const searchTermLower = searchTerm.toLowerCase();
+        
+        // Loop through all cards and check for matches
+        cards.forEach(card => {
+            const title = card.getAttribute('data-title').toLowerCase();
+            const cardTitle = card.querySelector('h2')?.textContent.toLowerCase() || '';
+            const cardSubtitle = card.querySelector('h3')?.textContent.toLowerCase() || '';
+            const cardText = card.querySelector('p')?.textContent.toLowerCase() || '';
+            
+            // Check if card matches search term in any field
+            if (searchTerm === '' || 
+                title.includes(searchTermLower) || 
+                cardTitle.includes(searchTermLower) ||
+                cardSubtitle.includes(searchTermLower) ||
+                cardText.includes(searchTermLower)) {
+                card.style.display = 'block';
+                hasResults = true;
+                highlightText(card, searchTermLower);
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show appropriate message based on search results
+        showNoResultsMessage(hasResults, searchTerm);
+        updateURL(searchTerm);
+    }
+    
+    /**
+     * Highlight search term in card text
+     * @param {Element} element - The card element to highlight text in
+     * @param {string} searchTerm - The term to highlight
+     */
+    function highlightText(element, searchTerm) {
+        if (!searchTerm) return;
+        
+        const elementsToHighlight = element.querySelectorAll('h2, h3, p');
+        
+        // Apply highlighting to all text elements
+        elementsToHighlight.forEach(el => {
+            const text = el.textContent;
+            const regex = new RegExp(searchTerm, 'gi');
+            el.innerHTML = text.replace(regex, match => 
+                `<span class="search-highlight">${match}</span>`
+            );
+        });
+    }
+    
+    /**
+     * Show no results message when search returns empty
+     * @param {boolean} hasResults - Whether search returned results
+     * @param {string} searchTerm - The search term that was used
+     */
+    function showNoResultsMessage(hasResults, searchTerm) {
+        const container = document.querySelector('.container');
+        let message = document.getElementById('no-results-message');
+        
+        if (!hasResults && searchTerm) {
+            if (!message) {
+                // Create and display no results message
+                message = document.createElement('div');
+                message.id = 'no-results-message';
+                message.className = 'no-results';
+                message.innerHTML = `
+                    <p>No recipes found for "<strong>${searchTerm}</strong>"</p>
+                    <button id="clear-search">Show All Recipes</button>
+                `;
+                container.appendChild(message);
+                
+                // Add event listener to clear search button
+                document.getElementById('clear-search').addEventListener('click', function() {
+                    searchInput.value = '';
+                    performSearch('');
+                    message.remove();
+                });
+            }
+        } else if (message) {
+            message.remove();
+        }
+    }
+    
+    /**
+     * Update URL with search parameters for shareable links
+     * @param {string} searchTerm - The search term to add to URL
+     */
+    function updateURL(searchTerm) {
+        const url = new URL(window.location);
+        if (searchTerm) {
+            url.searchParams.set('search', searchTerm);
+        } else {
+            url.searchParams.delete('search');
+        }
+        window.history.pushState({}, '', url);
+    }
 });
+
+/**
+ * Initialize basic search functionality
+ */
 function initSearch() {
     const searchInput = document.getElementById('searchInput');
     if (!searchInput) return;
 
+    // Simple search by title only
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         const allCards = document.querySelectorAll('.cards');
@@ -146,32 +194,49 @@ function initSearch() {
     });
 }
 
+// Initialize search when DOM is loaded
 document.addEventListener('DOMContentLoaded', initSearch);
 
+// ============================================================================
+// COMMENTS SYSTEM FUNCTIONALITY
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    /**
+     * Initialize comments with hardcoded data if none exists
+     */
     const initializeComments = () => {
-    const existing = JSON.parse(localStorage.getItem('comments') || '[]');
-    if (existing.length === 0) {
-        const hardcodedComments = [
-            { id: 1, username: "🎂 Sara M.", text: "I tried the vanilla cupcake recipe and it was a hit at my niece's birthday!" },
-            { id: 2, username: "🍪 Daniel K.", text: "Love your step-by-step guides. Makes baking less scary for beginners like me." },
-            { id: 3, username: "🧁 Amina R.", text: "Just rated 5 stars! Your blog layout is cozy and beautiful." }
-        ];
-        localStorage.setItem('comments', JSON.stringify(hardcodedComments));
-    }
-};
+        const existing = JSON.parse(localStorage.getItem('comments') || '[]');
+        if (existing.length === 0) {
+            // Create initial sample comments
+            const hardcodedComments = [
+                { id: 1, username: "🎂 Sara M.", text: "I tried the vanilla cupcake recipe and it was a hit at my niece's birthday!" },
+                { id: 2, username: "🍪 Daniel K.", text: "Love your step-by-step guides. Makes baking less scary for beginners like me." },
+                { id: 3, username: "🧁 Amina R.", text: "Just rated 5 stars! Your blog layout is cozy and beautiful." }
+            ];
+            localStorage.setItem('comments', JSON.stringify(hardcodedComments));
+        }
+    };
 
-
+    /**
+     * Load and display all comments from localStorage
+     */
     const loadComments = () => {
         const comments = JSON.parse(localStorage.getItem('comments')) || [];
         const commentList = document.getElementById('comment-list');
         commentList.innerHTML = ''; 
         
+        // Create and append comment elements
         comments.forEach(comment => {
             commentList.appendChild(createCommentElement(comment));
         });
     };
 
+    /**
+     * Create DOM element for a comment
+     * @param {Object} comment - The comment object
+     * @returns {Element} The created comment element
+     */
     const createCommentElement = (comment) => {
         const div = document.createElement('div');
         div.className = 'comment';
@@ -187,15 +252,23 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="text">${comment.text}</p>
         `;
         
+        // Add event listeners for edit and delete actions
         div.querySelector('.edit-comment').addEventListener('click', () => openEditModal(comment.id));
         div.querySelector('.delete-comment').addEventListener('click', () => openDeleteModal(comment.id));
         
         return div;
     };
 
+    // Utility functions for comment management
     const getComments = () => JSON.parse(localStorage.getItem('comments')) || [];
     const saveComments = (comments) => localStorage.setItem('comments', JSON.stringify(comments));
 
+    /**
+     * Add a new comment
+     * @param {string} username - The comment author's username
+     * @param {string} text - The comment text
+     * @returns {Object} The newly created comment object
+     */
     const addComment = (username, text) => {
         const comments = getComments();
         const newComment = { id: Date.now(), username, text };
@@ -204,6 +277,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return newComment;
     };
 
+    /**
+     * Update an existing comment
+     * @param {number} id - The ID of the comment to update
+     * @param {string} username - The updated username
+     * @param {string} text - The updated comment text
+     * @returns {boolean} Success status of the update operation
+     */
     const updateComment = (id, username, text) => {
         const comments = getComments();
         const index = comments.findIndex(c => c.id == id);
@@ -215,11 +295,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     };
 
+    /**
+     * Delete a comment
+     * @param {number} id - The ID of the comment to delete
+     */
     const deleteComment = (id) => {
         saveComments(getComments().filter(c => c.id != id));
     };
 
+    // Track currently selected comment for modal operations
     let currentCommentId = null;
+    
+    /**
+     * Open edit modal for a specific comment
+     * @param {number} id - The ID of the comment to edit
+     */
     const openEditModal = (id) => {
         const comment = getComments().find(c => c.id == id);
         if (comment) {
@@ -231,14 +321,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    /**
+     * Open delete confirmation modal
+     * @param {number} id - The ID of the comment to delete
+     */
     const openDeleteModal = (id) => {
         currentCommentId = id;
         document.getElementById('delete-comment-modal').style.display = 'block';
     };
 
+    // Initialize comments system
     initializeComments();
     loadComments();
 
+    // Add new comment form submission handler
     document.getElementById('comment-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const username = this.username.value.trim();
@@ -251,6 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Edit comment form submission handler
     document.getElementById('edit-comment-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const username = this['edit-username'].value.trim();
@@ -262,35 +359,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Delete confirmation handler
     document.getElementById('confirm-delete').addEventListener('click', function() {
         deleteComment(currentCommentId);
         loadComments();
         document.getElementById('delete-comment-modal').style.display = 'none';
     });
 
+    // Delete cancellation handler
     document.getElementById('cancel-delete').addEventListener('click', function() {
         document.getElementById('delete-comment-modal').style.display = 'none';
     });
 
+    // Modal close handlers
     document.querySelectorAll('.close-modal').forEach(el => {
         el.addEventListener('click', () => {
             document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
         });
     });
 
+    // Close modals when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
             e.target.style.display = 'none';
         }
     });
 });
+
+// ============================================================================
+// FAVORITES MANAGEMENT SYSTEM
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Load favorites from localStorage
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     
+    /**
+     * Save favorites to localStorage
+     */
     function saveFavorites() {
         localStorage.setItem('favorites', JSON.stringify(favorites));
     }
 
+    /**
+     * Toggle favorite status for a recipe card
+     * @param {Element} cardElement - The card element to toggle favorite status for
+     */
     function toggleFavorite(cardElement) {
         const title = cardElement.querySelector('h2').textContent;
         const subtitle = cardElement.querySelector('h3').textContent;
@@ -299,6 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const existingIndex = favorites.findIndex(fav => fav.title === title);
         
+        // Add or remove from favorites
         if (existingIndex === -1) {
             favorites.push({
                 title,
@@ -314,6 +429,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFavoriteButtons();
     }
 
+    /**
+     * Update all favorite buttons to reflect current favorite status
+     */
     function updateFavoriteButtons() {
         document.querySelectorAll('.favorite-btn').forEach(btn => {
             const card = btn.closest('.cards');
@@ -328,6 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Handle favorite button clicks
     document.addEventListener('click', function(e) {
         if (e.target.closest('.favorite-btn')) {
             const btn = e.target.closest('.favorite-btn');
@@ -336,21 +455,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Display favorites on favorites page
     if (document.getElementById('favorites-container')) {
         displayFavorites();
     }
 
+    /**
+     * Display all favorite posts in the favorites container
+     */
     function displayFavorites() {
         const container = document.getElementById('favorites-container');
         if (!container) return;
         
         container.innerHTML = '';
 
+        // Show message if no favorites
         if (favorites.length === 0) {
             container.innerHTML = '<p class="no-favorites">No favorite posts yet. Start adding some!</p>';
             return;
         }
 
+        // Create and display favorite cards
         favorites.forEach(post => {
             const card = document.createElement('div');
             card.className = 'favorite-card';
@@ -367,16 +492,20 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             container.appendChild(card);
 
+            // Add remove from favorites functionality
             card.querySelector('.favorite-btn').addEventListener('click', function() {
                 favorites = favorites.filter(fav => fav.title !== post.title);
                 saveFavorites();
-                displayFavorites(); 
+                displayFavorites(); // Refresh display
             });
         });
     }
 
+    // Initialize favorite buttons
     updateFavoriteButtons();
 });
+
+// Alternative favorites implementation for different page structure
 document.addEventListener('DOMContentLoaded', function() {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     
@@ -410,6 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Display favorites on favorites page
     if (document.getElementById('favorites-container')) {
         displayFavorites();
     }
@@ -427,6 +557,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Display each favorite post
         storedFavorites.forEach(post => {
             const card = document.createElement('div');
             card.className = 'card'; 
@@ -443,6 +574,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             container.appendChild(card);
 
+            // Add remove functionality
             card.querySelector('.favorite-btn').addEventListener('click', function() {
                 const updatedFavorites = storedFavorites.filter(fav => fav.title !== post.title);
                 localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
@@ -454,15 +586,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 displayFavorites();
+            });
         });
-    });
-}});
+    }
+});
+
+// ============================================================================
+// NEW POST CREATION FUNCTIONALITY
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
     const postForm = document.getElementById('postForm');
     if (postForm) {
         postForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Get form values
             const title = document.getElementById('title').value;
             const subTitle = document.getElementById('sub-title').value;
             const description = document.getElementById('description').value;
@@ -470,11 +609,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const imageInput = document.getElementById('image');
             const imageFile = imageInput.files[0];
             
+            // Process image and create new post
             if (imageFile) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageData = e.target.result;
                     
+                    // Create new post object
                     const newPost = {
                         title: title,
                         subtitle: subTitle,
@@ -486,6 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     saveNewPost(newPost);
                     
+                    // Redirect to posts page
                     window.location.href = 'posts.html';
                 };
                 reader.readAsDataURL(imageFile);
@@ -494,21 +636,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+/**
+ * Save a new post to localStorage
+ * @param {Object} post - The post object to save
+ */
 function saveNewPost(post) {    
     const savedPosts = localStorage.getItem('bakingPosts');
     let posts = [];
     
+    // Load existing posts or use default data
     if (savedPosts) {
         posts = JSON.parse(savedPosts);
     } else {
         posts = [...postsData];
     }
     
-    posts.unshift(post); 
+    posts.unshift(post); // Add new post to beginning
     
     localStorage.setItem('bakingPosts', JSON.stringify(posts));
 }
+
+// ============================================================================
+// LAYOUT AND DISPLAY MANAGEMENT
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Move "View All" to categories section
     const viewAll = document.querySelector('.view-all-container');
     const categories = document.querySelector('.categories');
 
@@ -517,6 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
         viewAll.style.display = 'block';
     }
 
+    // Limit displayed featured posts to 3
     const container = document.querySelector('.featured-container');
     if (container) {
         const cards = container.querySelectorAll('.cards');
@@ -528,6 +682,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ============================================================================
+// POSTS DATA AND MANAGEMENT SYSTEM
+// ============================================================================
+
+// Default posts data
 const postsData = [
     {
         title: "Cakes & Cupcakes",
@@ -572,6 +732,8 @@ const postsData = [
         isFavorite: false
     }
 ];
+
+// Global variables for post management
 const container = document.querySelector('.container');
 const postModal = document.getElementById('postModal');
 const editModal = document.getElementById('editModal');
@@ -588,12 +750,18 @@ const editImage = document.getElementById('editImage');
 let currentPostIndex = null;
 let posts = [];
 
+/**
+ * Initialize the posts management system
+ */
 function init() {
     loadPosts();
     renderPosts();
     setupEventListeners();
 }
 
+/**
+ * Load posts from localStorage or use default data
+ */
 function loadPosts() {
     const savedPosts = localStorage.getItem('bakingPosts');
     if (savedPosts) {
@@ -604,10 +772,16 @@ function loadPosts() {
     }
 }
 
+/**
+ * Save posts to localStorage
+ */
 function savePosts() {
     localStorage.setItem('bakingPosts', JSON.stringify(posts));
 }
 
+/**
+ * Render all posts to the container
+ */
 function renderPosts() {
     if (!container) return; 
     
@@ -633,7 +807,11 @@ function renderPosts() {
     });
 }
 
+/**
+ * Set up all event listeners for post interactions
+ */
 function setupEventListeners() {
+    // Handle card clicks (open post modal)
     container.addEventListener('click', (e) => {
         const card = e.target.closest('.cards');
         if (!card) return;
@@ -646,6 +824,7 @@ function setupEventListeners() {
         openPostModal(currentPostIndex);
     });
 
+    // Handle favorite button clicks
     container.addEventListener('click', (e) => {
         if (e.target.closest('.favorite-btn')) {
             e.stopPropagation();
@@ -655,6 +834,7 @@ function setupEventListeners() {
         }
     });
 
+    // Handle edit button clicks
     container.addEventListener('click', (e) => {
         if (e.target.closest('.edit-btn')) {
             e.stopPropagation();
@@ -664,6 +844,7 @@ function setupEventListeners() {
         }
     });
 
+    // Handle delete button clicks
     container.addEventListener('click', (e) => {
         if (e.target.closest('.delete-btn')) {
             e.stopPropagation();
@@ -673,6 +854,7 @@ function setupEventListeners() {
         }
     });
 
+    // Modal close buttons
     document.querySelectorAll('.recipe-close-modal').forEach(btn => {
         btn.addEventListener('click', () => {
             postModal.style.display = 'none';
@@ -681,12 +863,14 @@ function setupEventListeners() {
         });
     });
 
+    // Close modals when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target === postModal) postModal.style.display = 'none';
         if (e.target === editModal) editModal.style.display = 'none';
         if (e.target === deleteModal) deleteModal.style.display = 'none';
     });
 
+    // Edit modal buttons
     editModal.querySelector('.recipe-cancel-btn').addEventListener('click', () => {
         editModal.style.display = 'none';
     });
@@ -695,6 +879,7 @@ function setupEventListeners() {
         saveEditedPost();
     });
 
+    // Delete modal buttons
     deleteModal.querySelector('.recipe-cancel-btn').addEventListener('click', () => {
         deleteModal.style.display = 'none';
     });
@@ -704,6 +889,10 @@ function setupEventListeners() {
     });
 }
 
+/**
+ * Open post detail modal
+ * @param {number} index - Index of the post to display
+ */
 function openPostModal(index) {
     const post = posts[index];
     modalImage.src = post.image;
@@ -714,6 +903,10 @@ function openPostModal(index) {
     postModal.style.display = 'flex';
 }
 
+/**
+ * Open edit modal for a post
+ * @param {number} index - Index of the post to edit
+ */
 function openEditModal(index) {
     const post = posts[index];
     editTitle.value = post.title;
@@ -723,16 +916,27 @@ function openEditModal(index) {
     editModal.style.display = 'flex';
 }
 
+/**
+ * Open delete confirmation modal
+ * @param {number} index - Index of the post to delete
+ */
 function openDeleteModal(index) {
     deleteModal.style.display = 'flex';
 }
 
+/**
+ * Toggle favorite status for a post
+ * @param {number} index - Index of the post to toggle
+ */
 function toggleFavorite(index) {
     posts[index].isFavorite = !posts[index].isFavorite;
     savePosts();
     renderPosts();
 }
 
+/**
+ * Save edited post data
+ */
 function saveEditedPost() {
     if (currentPostIndex === null) return;
     
@@ -749,6 +953,10 @@ function saveEditedPost() {
     editModal.style.display = 'none';
 }
 
+/**
+ * Delete a post
+ * @param {number} index - Index of the post to delete
+ */
 function deletePost(index) {
     posts.splice(index, 1);
     savePosts();
@@ -756,4 +964,5 @@ function deletePost(index) {
     deleteModal.style.display = 'none';
 }
 
+// Initialize the posts system
 init();
